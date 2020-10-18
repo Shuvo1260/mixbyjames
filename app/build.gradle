@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -13,16 +15,27 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -42,4 +55,62 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    // CardView dependency
+    implementation "androidx.cardview:cardview:1.0.0"
+
+
+    // Kotlin dependency
+    implementation "org.koin:koin-core:2.1.0-alpha-1"
+
+    // Material design library dependecy
+//    implementation 'com.google.android.material:material:1.2.0-alpha01'
+    implementation 'com.google.android.material:material:1.2.0-alpha06'
+
+
+    implementation 'com.google.android.material:material:1.0.0'
+
+    // Android support dependency
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    def appcompat_version = "1.1.0"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+
+    // Fragment dependency
+    implementation 'androidx.fragment:fragment:1.1.0-rc04'
+
+    // sdp size dependency
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+
+
+    // Multidex dependecy
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
+
+    // Recyclerview dependency
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    // For control over item selection of both touch and mouse driven selection
+    implementation "androidx.recyclerview:recyclerview-selection:1.1.0-rc01"
+
+
+    // Room Database:::
+    def room_version = "2.2.5"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    implementation "androidx.room:room-ktx:$room_version"
+
+//    // Lifecycle:::
+//    def lifecycle_version = "2.1.0"
+//
+//    // ViewModel and LiveData
+//    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+
+//    implementation 'com.squareup.picasso:picasso:2.71828'
+
+
+    implementation 'com.airbnb.android:lottie:3.4.1'
+
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
 }
