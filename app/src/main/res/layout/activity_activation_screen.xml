@@ -1,9 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".Features.View.ActivationScreen">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/_20sdp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/topMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activationCodeTopMessage"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            android:layout_marginTop="@dimen/_50sdp"
+            />
+
+
+
+        <TextView
+            android:id="@+id/activationErrorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activationErrorMessage"
+            android:gravity="center"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/red"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:hint="@string/activationCode"
+            android:textColorHint="@android:color/black"
+            app:hintTextColor="@android:color/black"
+            app:boxStrokeColor="@android:color/black"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/activationCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:inputType="text"
+                android:singleLine="true"
+                android:drawableEnd="@drawable/ic_code"
+                android:textColor="@android:color/black"
+                android:drawableRight="@drawable/ic_code" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:hint="@string/email"
+            android:textColorHint="@android:color/black"
+            app:hintTextColor="@android:color/black"
+            app:boxStrokeColor="@android:color/black"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:drawableEnd="@drawable/ic_email"
+                android:textColor="@android:color/black"
+                android:drawableRight="@drawable/ic_code" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/activateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activate"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14sdp"
+            android:padding="@dimen/_10sdp"
+            android:textAllCaps="false"
+            android:background="@drawable/view_button"
+            android:layout_marginTop="@dimen/_20sdp"
+            />
+
+        <TextView
+            android:id="@+id/noActivationCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/noActivation_code"
+            android:gravity="end"
+            android:textSize="@dimen/_14sdp"
+            android:textStyle="bold"
+            android:textColor="@color/sky"
+            android:paddingHorizontal="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            />
+    </LinearLayout>
+</layout>

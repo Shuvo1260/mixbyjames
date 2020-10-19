@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">mixbyjames</string>
+    <string name="activationCode">Activation code</string>
+    <string name="activationCodeTopMessage">Please enter the activation code that was sent to you along with your email address. You will not be required to this again.</string>
+    <string name="email">Email Address</string>
+    <string name="activationErrorMessage">Sorry, the information entered is incorrect</string>
+    <string name="activate">Activate</string>
+    <string name="noActivation_code">Don\'t have an activation code?</string>
 </resources>

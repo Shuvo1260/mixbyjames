@@ -15,15 +15,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mixbyjames">
-        <activity android:name=".Features.View.ActivationScreen"></activity>
-        <activity android:name=".Features.View.SplashScreen" >
+        <activity android:name=".Features.View.ActivationScreen"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".Features.View.SplashScreen"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Features.View.MainActivity">
+        <activity android:name=".Features.View.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
