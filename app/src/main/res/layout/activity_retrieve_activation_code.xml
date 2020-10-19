@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Features.View.RetrieveActivationCode">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/_20sdp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        >
+
+
+        <TextView
+            android:id="@+id/topMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lostActivationCodeTopMessage"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            android:layout_marginTop="@dimen/_50sdp"
+            />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:hint="@string/email"
+            android:textColorHint="@android:color/black"
+            app:hintTextColor="@android:color/black"
+            app:boxStrokeColor="@android:color/black"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:drawableEnd="@drawable/ic_email"
+                android:textColor="@android:color/black"
+                android:drawableRight="@drawable/ic_code" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/retrieveActivationCodeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/retrieve_activation_code"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14sdp"
+            android:padding="@dimen/_10sdp"
+            android:textAllCaps="false"
+            android:background="@drawable/view_button"
+            android:layout_marginTop="@dimen/_20sdp"
+            />
+
+        <TextView
+            android:id="@+id/retrieveCodeMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/red"
+            android:text="@string/retrieveCodeMessage"
+            android:gravity="center"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            />
+
+        <TextView
+            android:id="@+id/goBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/goBack"
+            android:gravity="center"
+            android:textSize="@dimen/_14sdp"
+            android:textStyle="bold"
+            android:textColor="@color/sky"
+            android:paddingHorizontal="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_40sdp"
+            />
+    </LinearLayout>
+</layout>

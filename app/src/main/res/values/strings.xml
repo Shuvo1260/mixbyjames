@@ -6,4 +6,8 @@
     <string name="activationErrorMessage">Sorry, the information entered is incorrect</string>
     <string name="activate">Activate</string>
     <string name="noActivation_code">Don\'t have an activation code?</string>
+    <string name="retrieve_activation_code">Retrieve Activation Code</string>
+    <string name="goBack">Go back</string>
+    <string name="lostActivationCodeTopMessage">If you have lost your activation code please enter the email address below that you used to place your order and  we will resend it.</string>
+    <string name="retrieveCodeMessage">We have sent your activation code to the above email address. Please check your spam folder if it is not in the inbox.</string>
 </resources>
