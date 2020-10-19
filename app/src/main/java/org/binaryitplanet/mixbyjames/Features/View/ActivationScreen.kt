@@ -31,7 +31,7 @@ class ActivationScreen : AppCompatActivity(), ActivationScreenView {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_activation_screen)
 
         model = UserInfoModelIml(this)
-        presenter = UserInfoPresenterIml(this, model)
+        presenter = UserInfoPresenterIml(this, this, model)
 
         binding.activateButton.setOnClickListener {
             activate()
@@ -77,6 +77,11 @@ class ActivationScreen : AppCompatActivity(), ActivationScreenView {
 
             if (binding.activationErrorMessage.visibility == View.VISIBLE)
                 binding.activationErrorMessage.visibility = View.INVISIBLE
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.lefttoright, R.anim.righttoleft)
+        finish()
+
         Log.d(TAG, "UserInfo: $userInfoUtils")
     }
 

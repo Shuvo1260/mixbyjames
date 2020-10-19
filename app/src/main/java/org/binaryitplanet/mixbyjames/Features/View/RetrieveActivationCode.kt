@@ -30,7 +30,7 @@ class RetrieveActivationCode : AppCompatActivity(), ActivationScreenView {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_retrieve_activation_code)
 
         model = UserInfoModelIml(this)
-        presenter = UserInfoPresenterIml(this, model)
+        presenter = UserInfoPresenterIml(this, this, model)
 
         binding.goBack.setOnClickListener {
             onBackPressed()
