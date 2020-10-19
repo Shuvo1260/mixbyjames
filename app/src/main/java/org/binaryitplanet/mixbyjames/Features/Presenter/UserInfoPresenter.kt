@@ -6,10 +6,6 @@ interface UserInfoPresenter {
         email: String
     )
 
-    fun getAudio(
-        filename: String
-    )
-
     fun getActivationCode(
         email: String
     )

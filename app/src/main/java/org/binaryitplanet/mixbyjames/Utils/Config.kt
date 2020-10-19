@@ -15,6 +15,7 @@ class Config {
         val FILE_NAME = "filename"
         val MESSAGE = "message"
         val ACTIVATING_MESSAGE = "Activating..."
+        val REQUESTING_MESSAGE = "Requesting for activation code"
 
         val REQUIRED_FIELD = "Required field"
 

@@ -34,11 +34,6 @@ class ActivationScreen : AppCompatActivity(), ActivationScreenView {
         presenter = UserInfoPresenterIml(this, model)
 
         binding.activateButton.setOnClickListener {
-            Toast.makeText(
-                this,
-                Config.ACTIVATING_MESSAGE,
-                Toast.LENGTH_SHORT
-            ).show()
             activate()
         }
 
@@ -56,6 +51,11 @@ class ActivationScreen : AppCompatActivity(), ActivationScreenView {
 
 
         if (checkValidation(email, activationCode))
+            Toast.makeText(
+                this,
+                Config.ACTIVATING_MESSAGE,
+                Toast.LENGTH_SHORT
+            ).show()
             presenter.getUserInfo(activationCode, email)
     }
 
@@ -75,12 +75,14 @@ class ActivationScreen : AppCompatActivity(), ActivationScreenView {
 
     override fun onActivationSuccessListener(userInfoUtils: UserInfoUtils) {
 
-        binding.activationErrorMessage.visibility = View.INVISIBLE
+            if (binding.activationErrorMessage.visibility == View.VISIBLE)
+                binding.activationErrorMessage.visibility = View.INVISIBLE
         Log.d(TAG, "UserInfo: $userInfoUtils")
     }
 
     override fun onActivationFailedListener(message: String) {
-        binding.activationErrorMessage.visibility = View.VISIBLE
+        if (binding.activationErrorMessage.visibility == View.INVISIBLE)
+            binding.activationErrorMessage.visibility = View.VISIBLE
 
         Log.d(TAG, "ActivationFailed: $message")
     }
