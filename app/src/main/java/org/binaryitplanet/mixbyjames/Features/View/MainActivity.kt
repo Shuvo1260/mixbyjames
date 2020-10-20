@@ -177,7 +177,6 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         mediaPlayer?.start()
 
         mediaPlayer?.setOnCompletionListener {
-            Thread.sleep(100)
             mediaPlayer?.start()
         }
     }
