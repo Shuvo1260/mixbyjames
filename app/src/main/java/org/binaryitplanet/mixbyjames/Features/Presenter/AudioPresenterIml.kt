@@ -60,29 +60,31 @@ class AudioPresenterIml(
                 fileName
             )
 
-            var inputStream: InputStream? = null
-            var outputStream: OutputStream? = null
-            var fileSize = body.contentLength()
-            var fileReader = ByteArray(fileSize.toInt())
-            var fileSizeDownload = 0
-            inputStream = body.byteStream()
+            if (!file.exists()) {
+                var inputStream: InputStream? = null
+                var outputStream: OutputStream? = null
+                var fileSize = body.contentLength()
+                var fileReader = ByteArray(fileSize.toInt())
+                var fileSizeDownload = 0
+                inputStream = body.byteStream()
 
-            outputStream = FileOutputStream(file)
-            while (true) {
-                var read = inputStream.read(fileReader)
-                Log.d(TAG, "FileReader: ${inputStream}")
-                if (read == -1)
-                    break
-                outputStream.write(fileReader, 0, read)
-                fileSizeDownload += read
+                outputStream = FileOutputStream(file)
+                while (true) {
+                    var read = inputStream.read(fileReader)
+                    Log.d(TAG, "FileReader: ${inputStream}")
+                    if (read == -1)
+                        break
+                    outputStream.write(fileReader, 0, read)
+                    fileSizeDownload += read
 
-                Log.d(TAG, "File is donwloaded: $fileSizeDownload of $fileSize")
+                    Log.d(TAG, "File is donwloaded: $fileSizeDownload of $fileSize")
+                }
+                Log.d(TAG, "Downloaded")
+                outputStream.flush()
+                inputStream?.close()
+
+                outputStream?.close()
             }
-            Log.d(TAG, "Downloaded")
-            outputStream.flush()
-            inputStream?.close()
-
-            outputStream?.close()
 
             var uri = Uri.fromFile(file)
 
