@@ -9,6 +9,7 @@ import android.media.ToneGenerator.MAX_VOLUME
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.SeekBar
@@ -23,6 +24,7 @@ import org.binaryitplanet.mixbyjames.Features.Presenter.AudioPresenterIml
 import org.binaryitplanet.mixbyjames.R
 import org.binaryitplanet.mixbyjames.Utils.Config
 import org.binaryitplanet.mixbyjames.databinding.ActivityMainBinding
+import java.lang.Exception
 import kotlin.math.ln
 
 
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     private lateinit var sharedPreferences: SharedPreferences
 
     private var mediaPlayer: MediaPlayer? = null
+    private var secondMediaPlayer: MediaPlayer? = null
 
     private var volumeProgress: Int = 0
 
@@ -88,6 +91,12 @@ class MainActivity : AppCompatActivity(), MainActivityView {
                 mediaPlayer?.release()
                 mediaPlayer = null
             }
+
+            if (secondMediaPlayer != null) {
+                secondMediaPlayer?.stop()
+                secondMediaPlayer?.release()
+                secondMediaPlayer = null
+            }
         }
 
         requestPermissions(
@@ -106,6 +115,9 @@ class MainActivity : AppCompatActivity(), MainActivityView {
 
                 if (mediaPlayer != null)
                     mediaPlayer?.setVolume(volume, volume)
+
+                if (secondMediaPlayer != null)
+                    secondMediaPlayer?.setVolume(volume, volume)
 
                 volumeProgress = progress
 
@@ -170,16 +182,36 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     private fun playAudio(audioUriString: String?) {
         var audioUri = Uri.parse(Uri.decode(audioUriString))
         mediaPlayer = MediaPlayer.create(this, audioUri)
+        secondMediaPlayer = MediaPlayer.create(this, audioUri)
 
         var volume = getVolume(volumeProgress)
 
         mediaPlayer?.setVolume(volume, volume)
         mediaPlayer?.start()
-        mediaPlayer?.isLooping = true
+        mediaPlayer?.setNextMediaPlayer(secondMediaPlayer)
 
-//        mediaPlayer?.setOnCompletionListener {
-////            mediaPlayer?.start()
-//        }
+        mediaPlayer?.setOnCompletionListener {
+            it.reset()
+            try {
+                it.setDataSource(this, audioUri)
+                it.prepare()
+            } catch (e: Exception) {
+                Log.d(TAG, "prepare: ${e.message}")
+            }
+            secondMediaPlayer?.setNextMediaPlayer(mediaPlayer!!)
+        }
+
+        secondMediaPlayer?.setOnCompletionListener {
+            it.reset()
+            try {
+                it.setDataSource(this, audioUri)
+                it.prepare()
+            } catch (e: Exception) {
+                Log.d(TAG, "prepare2: ${e.message}")
+            }
+            mediaPlayer?.setNextMediaPlayer(secondMediaPlayer)
+        }
+
     }
 
     override fun onAudioDownloadingListener(status: Boolean, message: String) {
