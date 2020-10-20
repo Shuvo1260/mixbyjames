@@ -10,4 +10,7 @@
     <string name="goBack">Go back</string>
     <string name="lostActivationCodeTopMessage">If you have lost your activation code please enter the email address below that you used to place your order and  we will resend it.</string>
     <string name="retrieveCodeMessage">We have sent your activation code to the above email address. Please check your spam folder if it is not in the inbox.</string>
+    <string name="overall_volume">Overall Volume</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
 </resources>

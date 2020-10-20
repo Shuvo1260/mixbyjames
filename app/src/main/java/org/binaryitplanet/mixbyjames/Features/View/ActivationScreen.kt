@@ -50,13 +50,14 @@ class ActivationScreen : AppCompatActivity(), ActivationScreenView {
         val email = binding.email.text.toString()
 
 
-        if (checkValidation(email, activationCode))
+        if (checkValidation(email, activationCode)) {
             Toast.makeText(
                 this,
                 Config.ACTIVATING_MESSAGE,
                 Toast.LENGTH_SHORT
             ).show()
             presenter.getUserInfo(activationCode, email)
+        }
     }
 
     private fun checkValidation(email: String, activationCode: String): Boolean {

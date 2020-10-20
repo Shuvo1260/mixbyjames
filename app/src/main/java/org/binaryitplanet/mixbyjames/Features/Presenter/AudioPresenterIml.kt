@@ -1,5 +1,8 @@
 package org.binaryitplanet.mixbyjames.Features.Presenter
 
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import okhttp3.ResponseBody
 import org.binaryitplanet.mixbyjames.Common.RequestCompleteListener
@@ -11,7 +14,9 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 
+@Suppress("DEPRECATION")
 class AudioPresenterIml(
+    private val context: Context,
     private val view: MainActivityView,
     private val model: UserInfoModel
 ): AudioPresenter {
@@ -41,7 +46,10 @@ class AudioPresenterIml(
 
     private fun writeResponseBodyToStorage(body: ResponseBody, fileName: String): Boolean {
         try {
-            val folder = File(Config.SD_CARD_PATH)
+            val folder = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    Config.AUDIO_PATH
+            )
 
             if (!folder.exists()) {
                 folder.mkdirs()
@@ -75,10 +83,30 @@ class AudioPresenterIml(
             inputStream?.close()
 
             outputStream?.close()
+
+            var uri = Uri.fromFile(file)
+
+            saveUri(uri)
+
             return true
         } catch (e: Exception) {
             Log.d(TAG, "WriteException: ${e.message}")
             return false
         }
+    }
+
+    private fun saveUri(uri: Uri) {
+
+        val sharedPreferences = context.getSharedPreferences(
+                Config.SHARED_PREFERENCE,
+                Context.MODE_PRIVATE
+        )!!
+
+        var editor = sharedPreferences.edit()
+
+        editor.putString(Config.AUDIO_URI, uri.toString())
+
+        editor.apply()
+        editor.commit()
     }
 }
