@@ -175,10 +175,11 @@ class MainActivity : AppCompatActivity(), MainActivityView {
 
         mediaPlayer?.setVolume(volume, volume)
         mediaPlayer?.start()
+        mediaPlayer?.isLooping = true
 
-        mediaPlayer?.setOnCompletionListener {
-            mediaPlayer?.start()
-        }
+//        mediaPlayer?.setOnCompletionListener {
+////            mediaPlayer?.start()
+//        }
     }
 
     override fun onAudioDownloadingListener(status: Boolean, message: String) {
