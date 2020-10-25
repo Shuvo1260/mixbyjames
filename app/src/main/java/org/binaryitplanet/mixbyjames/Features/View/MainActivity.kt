@@ -198,6 +198,10 @@ class MainActivity : AppCompatActivity(), MainActivityView {
             } catch (e: Exception) {
                 Log.d(TAG, "prepare: ${e.message}")
             }
+            Log.d(TAG, "FirstMediaPlayer $volume")
+            volume = getVolume(volumeProgress)
+            secondMediaPlayer?.setVolume(volume, volume)
+            mediaPlayer?.setVolume(volume, volume)
             secondMediaPlayer?.setNextMediaPlayer(mediaPlayer!!)
         }
 
@@ -209,7 +213,11 @@ class MainActivity : AppCompatActivity(), MainActivityView {
             } catch (e: Exception) {
                 Log.d(TAG, "prepare2: ${e.message}")
             }
-            mediaPlayer?.setNextMediaPlayer(secondMediaPlayer)
+            Log.d(TAG, "SecondMediaPlayer $volume")
+            volume = getVolume(volumeProgress)
+            mediaPlayer?.setVolume(volume, volume)
+            secondMediaPlayer?.setVolume(volume, volume)
+            mediaPlayer?.setNextMediaPlayer(secondMediaPlayer!!)
         }
 
     }
