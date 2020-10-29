@@ -13,4 +13,5 @@
     <string name="overall_volume">Overall Volume</string>
     <string name="min">Min</string>
     <string name="max">Max</string>
+    <string name="pinkVolume">Pink Noise</string>
 </resources>

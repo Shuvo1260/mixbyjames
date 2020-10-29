@@ -27,7 +27,7 @@
             android:textSize="@dimen/_14sdp"
             android:text="@string/app_name"
             android:gravity="center"
-            android:layout_marginTop="@dimen/_60sdp"
+            android:layout_marginTop="@dimen/_40sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo"
@@ -39,8 +39,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_200sdp"
             android:baselineAlignBottom="true"
-            android:layout_marginTop="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_30sdp"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/topMessage"
@@ -53,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +64,7 @@
                 android:id="@+id/playButton"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_100sdp"
-                android:layout_marginTop="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_30sdp"
                 android:background="@drawable/view_play_pause_background"
                 android:src="@drawable/ic_play"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +75,7 @@
                 android:id="@+id/pauseButton"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_100sdp"
-                android:layout_marginTop="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_30sdp"
                 android:background="@drawable/view_play_pause_background"
                 android:src="@drawable/ic_pause"
                 android:visibility="gone"
@@ -88,7 +90,7 @@
                 android:text="@string/overall_volume"
                 android:textSize="@dimen/_14sdp"
                 android:textColor="@color/black"
-                android:layout_marginTop="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_40sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/playButton" />
@@ -108,6 +110,7 @@
                 />
 
             <TextView
+                android:id="@+id/max"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -126,6 +129,53 @@
                 android:layout_marginTop="@dimen/_2sdp"
                 app:layout_constraintTop_toBottomOf="@id/volume"
                 app:layout_constraintEnd_toEndOf="@id/volume"
+                />
+
+
+            <TextView
+                android:id="@+id/pinkVolumeTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pinkVolume"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/black"
+                android:layout_marginTop="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/max" />
+            <SeekBar
+                android:id="@+id/pinkVolume"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pinkVolumeTitle"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/view_progress_drawable"
+                android:thumb="@drawable/view_thumb"
+                android:indeterminate="false"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                android:text="@string/min"
+                android:layout_marginTop="@dimen/_2sdp"
+                app:layout_constraintTop_toBottomOf="@id/pinkVolume"
+                app:layout_constraintStart_toStartOf="@id/pinkVolume"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                android:text="@string/max"
+                android:layout_marginTop="@dimen/_2sdp"
+                app:layout_constraintTop_toBottomOf="@id/pinkVolume"
+                app:layout_constraintEnd_toEndOf="@id/pinkVolume"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

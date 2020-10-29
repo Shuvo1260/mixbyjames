@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.AssetFileDescriptor
 import android.media.MediaPlayer
 import android.media.ToneGenerator.MAX_VOLUME
 import android.net.Uri
@@ -44,7 +45,11 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     private var mediaPlayer: MediaPlayer? = null
     private var secondMediaPlayer: MediaPlayer? = null
 
+    private var pinkFirstMediaPlayer: MediaPlayer? = null
+    private var pinkSecondMediaPlayer: MediaPlayer? = null
+
     private var volumeProgress: Int = 0
+    private var pinkVolumeProgress: Int = 0
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +102,18 @@ class MainActivity : AppCompatActivity(), MainActivityView {
                 secondMediaPlayer?.release()
                 secondMediaPlayer = null
             }
+
+            if (pinkFirstMediaPlayer != null) {
+                pinkFirstMediaPlayer?.stop()
+                pinkFirstMediaPlayer?.release()
+                pinkFirstMediaPlayer = null
+            }
+
+            if (pinkSecondMediaPlayer != null) {
+                pinkSecondMediaPlayer?.stop()
+                pinkSecondMediaPlayer?.release()
+                pinkSecondMediaPlayer = null
+            }
         }
 
         requestPermissions(
@@ -105,7 +122,10 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         )
 
         volumeProgress = sharedPreferences.getInt(Config.VOLUME, 100)
+        pinkVolumeProgress = sharedPreferences.getInt(Config.PINK_VOLUME, 100)
+
         binding.volume.progress = volumeProgress
+        binding.pinkVolume.progress = pinkVolumeProgress
 
         binding.volume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -123,6 +143,38 @@ class MainActivity : AppCompatActivity(), MainActivityView {
 
                 var editor = sharedPreferences.edit()
                 editor.putInt(Config.VOLUME, volumeProgress)
+                editor.apply()
+                editor.commit()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                //
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                //
+            }
+
+        })
+
+
+        binding.pinkVolume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+                Log.d(TAG, "PinkProgress: $progress")
+
+                val volume = getVolume(progress)
+
+                if (pinkFirstMediaPlayer != null)
+                    pinkFirstMediaPlayer?.setVolume(volume, volume)
+
+                if (pinkSecondMediaPlayer != null)
+                    pinkSecondMediaPlayer?.setVolume(volume, volume)
+
+                pinkVolumeProgress = progress
+
+                var editor = sharedPreferences.edit()
+                editor.putInt(Config.PINK_VOLUME, pinkVolumeProgress)
                 editor.apply()
                 editor.commit()
             }
@@ -187,6 +239,7 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         var volume = getVolume(volumeProgress)
 
         mediaPlayer?.setVolume(volume, volume)
+        secondMediaPlayer?.setVolume(volume, volume)
         mediaPlayer?.start()
         mediaPlayer?.setNextMediaPlayer(secondMediaPlayer)
 
@@ -198,8 +251,9 @@ class MainActivity : AppCompatActivity(), MainActivityView {
             } catch (e: Exception) {
                 Log.d(TAG, "prepare: ${e.message}")
             }
-            Log.d(TAG, "FirstMediaPlayer $volume")
+
             volume = getVolume(volumeProgress)
+            Log.d(TAG, "FirstMediaPlayer $volume")
             secondMediaPlayer?.setVolume(volume, volume)
             mediaPlayer?.setVolume(volume, volume)
             secondMediaPlayer?.setNextMediaPlayer(mediaPlayer!!)
@@ -213,11 +267,69 @@ class MainActivity : AppCompatActivity(), MainActivityView {
             } catch (e: Exception) {
                 Log.d(TAG, "prepare2: ${e.message}")
             }
-            Log.d(TAG, "SecondMediaPlayer $volume")
+
             volume = getVolume(volumeProgress)
+            Log.d(TAG, "SecondMediaPlayer $volume")
             mediaPlayer?.setVolume(volume, volume)
             secondMediaPlayer?.setVolume(volume, volume)
             mediaPlayer?.setNextMediaPlayer(secondMediaPlayer!!)
+        }
+
+
+
+        // Pink media player
+        val assetFile: AssetFileDescriptor = resources.openRawResourceFd(R.raw.pink_noise)
+        pinkFirstMediaPlayer = MediaPlayer.create(this, R.raw.pink_noise)
+        pinkSecondMediaPlayer = MediaPlayer.create(this, R.raw.pink_noise)
+
+        var pinkVolume = getVolume(pinkVolumeProgress)
+
+        pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+        pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+        pinkFirstMediaPlayer?.start()
+        pinkFirstMediaPlayer?.setNextMediaPlayer(pinkSecondMediaPlayer)
+
+        pinkFirstMediaPlayer?.setOnCompletionListener {
+            it.reset()
+            try {
+                if (assetFile != null) {
+                    it.setDataSource(
+                            assetFile.fileDescriptor,
+                            assetFile.startOffset,
+                            assetFile.length
+                    )
+                    it.prepare()
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "PinkPrepare: ${e.message}")
+            }
+            pinkVolume = getVolume(pinkVolumeProgress)
+            Log.d(TAG, "PinkFirstMediaPlayer $pinkVolume")
+            pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+            pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+            pinkSecondMediaPlayer?.setNextMediaPlayer(pinkFirstMediaPlayer!!)
+        }
+
+        pinkSecondMediaPlayer?.setOnCompletionListener {
+            it.reset()
+            try {
+                if (assetFile != null) {
+                    it.setDataSource(
+                            assetFile.fileDescriptor,
+                            assetFile.startOffset,
+                            assetFile.length
+                    )
+                    it.prepare()
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "PinkPrepare2: ${e.message}")
+            }
+
+            pinkVolume = getVolume(pinkVolumeProgress)
+            Log.d(TAG, "PinkSecondMediaPlayer $pinkVolume")
+            pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+            pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+            pinkFirstMediaPlayer?.setNextMediaPlayer(pinkSecondMediaPlayer!!)
         }
 
     }

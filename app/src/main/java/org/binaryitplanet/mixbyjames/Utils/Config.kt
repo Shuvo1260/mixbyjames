@@ -15,6 +15,7 @@ class Config {
         val FILE_NAME = "filename"
         val MESSAGE = "message"
         val VOLUME = "volume"
+        val PINK_VOLUME = "pinkVolume"
         val ACTIVATING_MESSAGE = "Activating..."
         val REQUESTING_MESSAGE = "Requesting for activation code"
         val AUDIO_URI = "AudioUri"
