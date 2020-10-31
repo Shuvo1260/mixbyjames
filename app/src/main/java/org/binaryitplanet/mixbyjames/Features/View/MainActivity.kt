@@ -83,37 +83,7 @@ class MainActivity : AppCompatActivity(), MainActivityView {
         }
 
         binding.pauseButton.setOnClickListener {
-
-            binding.topMessage.text = Config.NOW_IN_PAUSE
-            if (binding.playButton.visibility == View.INVISIBLE)
-                binding.playButton.visibility = View.VISIBLE
-
-            if (binding.pauseButton.visibility == View.VISIBLE)
-                binding.pauseButton.visibility = View.GONE
-
-            if (mediaPlayer != null) {
-                mediaPlayer?.stop()
-                mediaPlayer?.release()
-                mediaPlayer = null
-            }
-
-            if (secondMediaPlayer != null) {
-                secondMediaPlayer?.stop()
-                secondMediaPlayer?.release()
-                secondMediaPlayer = null
-            }
-
-            if (pinkFirstMediaPlayer != null) {
-                pinkFirstMediaPlayer?.stop()
-                pinkFirstMediaPlayer?.release()
-                pinkFirstMediaPlayer = null
-            }
-
-            if (pinkSecondMediaPlayer != null) {
-                pinkSecondMediaPlayer?.stop()
-                pinkSecondMediaPlayer?.release()
-                pinkSecondMediaPlayer = null
-            }
+            pauseMedia()
         }
 
         requestPermissions(
@@ -191,6 +161,40 @@ class MainActivity : AppCompatActivity(), MainActivityView {
 
     }
 
+    private fun pauseMedia() {
+
+        binding.topMessage.text = Config.NOW_IN_PAUSE
+        if (binding.playButton.visibility == View.INVISIBLE)
+            binding.playButton.visibility = View.VISIBLE
+
+        if (binding.pauseButton.visibility == View.VISIBLE)
+            binding.pauseButton.visibility = View.GONE
+
+        if (mediaPlayer != null) {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
+
+        if (secondMediaPlayer != null) {
+            secondMediaPlayer?.stop()
+            secondMediaPlayer?.release()
+            secondMediaPlayer = null
+        }
+
+        if (pinkFirstMediaPlayer != null) {
+            pinkFirstMediaPlayer?.stop()
+            pinkFirstMediaPlayer?.release()
+            pinkFirstMediaPlayer = null
+        }
+
+        if (pinkSecondMediaPlayer != null) {
+            pinkSecondMediaPlayer?.stop()
+            pinkSecondMediaPlayer?.release()
+            pinkSecondMediaPlayer = null
+        }
+    }
+
     private fun getVolume(progress: Int): Float {
         return (1 - ln((MAX_VOLUME - progress).toDouble()) / ln(MAX_VOLUME.toDouble())).toFloat()
     }
@@ -248,15 +252,18 @@ class MainActivity : AppCompatActivity(), MainActivityView {
             try {
                 it.setDataSource(this, audioUri)
                 it.prepare()
+                it.setOnPreparedListener {
+                    volume = getVolume(volumeProgress)
+                    Log.d(TAG, "FirstMediaPlayer $volume")
+                    secondMediaPlayer?.setVolume(volume, volume)
+                    mediaPlayer?.setVolume(volume, volume)
+                    secondMediaPlayer?.setNextMediaPlayer(mediaPlayer!!)
+                }
             } catch (e: Exception) {
                 Log.d(TAG, "prepare: ${e.message}")
+                pauseMedia()
             }
 
-            volume = getVolume(volumeProgress)
-            Log.d(TAG, "FirstMediaPlayer $volume")
-            secondMediaPlayer?.setVolume(volume, volume)
-            mediaPlayer?.setVolume(volume, volume)
-            secondMediaPlayer?.setNextMediaPlayer(mediaPlayer!!)
         }
 
         secondMediaPlayer?.setOnCompletionListener {
@@ -264,15 +271,17 @@ class MainActivity : AppCompatActivity(), MainActivityView {
             try {
                 it.setDataSource(this, audioUri)
                 it.prepare()
+                it.setOnPreparedListener {
+                    volume = getVolume(volumeProgress)
+                    Log.d(TAG, "SecondMediaPlayer $volume")
+                    mediaPlayer?.setVolume(volume, volume)
+                    secondMediaPlayer?.setVolume(volume, volume)
+                    mediaPlayer?.setNextMediaPlayer(secondMediaPlayer!!)
+                }
             } catch (e: Exception) {
                 Log.d(TAG, "prepare2: ${e.message}")
+                pauseMedia()
             }
-
-            volume = getVolume(volumeProgress)
-            Log.d(TAG, "SecondMediaPlayer $volume")
-            mediaPlayer?.setVolume(volume, volume)
-            secondMediaPlayer?.setVolume(volume, volume)
-            mediaPlayer?.setNextMediaPlayer(secondMediaPlayer!!)
         }
 
 
@@ -299,15 +308,18 @@ class MainActivity : AppCompatActivity(), MainActivityView {
                             assetFile.length
                     )
                     it.prepare()
+                    it.setOnPreparedListener {
+                        pinkVolume = getVolume(pinkVolumeProgress)
+                        Log.d(TAG, "PinkFirstMediaPlayer $pinkVolume")
+                        pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+                        pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+                        pinkSecondMediaPlayer?.setNextMediaPlayer(pinkFirstMediaPlayer!!)
+                    }
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "PinkPrepare: ${e.message}")
+                pauseMedia()
             }
-            pinkVolume = getVolume(pinkVolumeProgress)
-            Log.d(TAG, "PinkFirstMediaPlayer $pinkVolume")
-            pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-            pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-            pinkSecondMediaPlayer?.setNextMediaPlayer(pinkFirstMediaPlayer!!)
         }
 
         pinkSecondMediaPlayer?.setOnCompletionListener {
@@ -320,16 +332,19 @@ class MainActivity : AppCompatActivity(), MainActivityView {
                             assetFile.length
                     )
                     it.prepare()
+
+                    it.setOnPreparedListener {
+                        pinkVolume = getVolume(pinkVolumeProgress)
+                        Log.d(TAG, "PinkSecondMediaPlayer $pinkVolume")
+                        pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+                        pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+                        pinkFirstMediaPlayer?.setNextMediaPlayer(pinkSecondMediaPlayer!!)
+                    }
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "PinkPrepare2: ${e.message}")
+                pauseMedia()
             }
-
-            pinkVolume = getVolume(pinkVolumeProgress)
-            Log.d(TAG, "PinkSecondMediaPlayer $pinkVolume")
-            pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-            pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-            pinkFirstMediaPlayer?.setNextMediaPlayer(pinkSecondMediaPlayer!!)
         }
 
     }
