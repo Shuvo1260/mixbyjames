@@ -171,25 +171,29 @@ class MainActivity : AppCompatActivity(), MainActivityView {
             binding.pauseButton.visibility = View.GONE
 
         if (mediaPlayer != null) {
-            mediaPlayer?.stop()
+            if (mediaPlayer!!.isPlaying)
+                mediaPlayer?.stop()
             mediaPlayer?.release()
             mediaPlayer = null
         }
 
         if (secondMediaPlayer != null) {
-            secondMediaPlayer?.stop()
+            if (secondMediaPlayer!!.isPlaying)
+                secondMediaPlayer?.stop()
             secondMediaPlayer?.release()
             secondMediaPlayer = null
         }
 
         if (pinkFirstMediaPlayer != null) {
-            pinkFirstMediaPlayer?.stop()
+            if (pinkFirstMediaPlayer!!.isPlaying)
+                pinkFirstMediaPlayer?.stop()
             pinkFirstMediaPlayer?.release()
             pinkFirstMediaPlayer = null
         }
 
         if (pinkSecondMediaPlayer != null) {
-            pinkSecondMediaPlayer?.stop()
+            if (pinkSecondMediaPlayer!!.isPlaying)
+                pinkSecondMediaPlayer?.stop()
             pinkSecondMediaPlayer?.release()
             pinkSecondMediaPlayer = null
         }
@@ -236,115 +240,135 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     }
 
     private fun playAudio(audioUriString: String?) {
-        var audioUri = Uri.parse(Uri.decode(audioUriString))
-        mediaPlayer = MediaPlayer.create(this, audioUri)
-        secondMediaPlayer = MediaPlayer.create(this, audioUri)
+        try {
+            var audioUri = Uri.parse(Uri.decode(audioUriString))
+            mediaPlayer = MediaPlayer.create(this, audioUri)
+            secondMediaPlayer = MediaPlayer.create(this, audioUri)
 
-        var volume = getVolume(volumeProgress)
+            var volume = getVolume(volumeProgress)
 
-        mediaPlayer?.setVolume(volume, volume)
-        secondMediaPlayer?.setVolume(volume, volume)
-        mediaPlayer?.start()
-        mediaPlayer?.setNextMediaPlayer(secondMediaPlayer)
+            mediaPlayer?.setVolume(volume, volume)
+            secondMediaPlayer?.setVolume(volume, volume)
+            mediaPlayer?.start()
+            mediaPlayer?.setNextMediaPlayer(secondMediaPlayer)
 
-        mediaPlayer?.setOnCompletionListener {
-            it.reset()
-            try {
-                it.setDataSource(this, audioUri)
-                it.prepare()
-                it.setOnPreparedListener {
-                    volume = getVolume(volumeProgress)
-                    Log.d(TAG, "FirstMediaPlayer $volume")
-                    secondMediaPlayer?.setVolume(volume, volume)
-                    mediaPlayer?.setVolume(volume, volume)
-                    secondMediaPlayer?.setNextMediaPlayer(mediaPlayer!!)
-                }
-            } catch (e: Exception) {
-                Log.d(TAG, "prepare: ${e.message}")
-                pauseMedia()
-            }
-
-        }
-
-        secondMediaPlayer?.setOnCompletionListener {
-            it.reset()
-            try {
-                it.setDataSource(this, audioUri)
-                it.prepare()
-                it.setOnPreparedListener {
-                    volume = getVolume(volumeProgress)
-                    Log.d(TAG, "SecondMediaPlayer $volume")
-                    mediaPlayer?.setVolume(volume, volume)
-                    secondMediaPlayer?.setVolume(volume, volume)
-                    mediaPlayer?.setNextMediaPlayer(secondMediaPlayer!!)
-                }
-            } catch (e: Exception) {
-                Log.d(TAG, "prepare2: ${e.message}")
-                pauseMedia()
-            }
-        }
-
-
-
-        // Pink media player
-        val assetFile: AssetFileDescriptor = resources.openRawResourceFd(R.raw.pink_noise)
-        pinkFirstMediaPlayer = MediaPlayer.create(this, R.raw.pink_noise)
-        pinkSecondMediaPlayer = MediaPlayer.create(this, R.raw.pink_noise)
-
-        var pinkVolume = getVolume(pinkVolumeProgress)
-
-        pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-        pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-        pinkFirstMediaPlayer?.start()
-        pinkFirstMediaPlayer?.setNextMediaPlayer(pinkSecondMediaPlayer)
-
-        pinkFirstMediaPlayer?.setOnCompletionListener {
-            it.reset()
-            try {
-                if (assetFile != null) {
-                    it.setDataSource(
-                            assetFile.fileDescriptor,
-                            assetFile.startOffset,
-                            assetFile.length
-                    )
+            mediaPlayer?.setOnCompletionListener {
+                try {
+                    if (it != null) {
+                        if (it.isPlaying)
+                            it.stop()
+                        it.reset()
+                    }
+                    it.setDataSource(this, audioUri)
                     it.prepare()
                     it.setOnPreparedListener {
-                        pinkVolume = getVolume(pinkVolumeProgress)
-                        Log.d(TAG, "PinkFirstMediaPlayer $pinkVolume")
-                        pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-                        pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-                        pinkSecondMediaPlayer?.setNextMediaPlayer(pinkFirstMediaPlayer!!)
+                        volume = getVolume(volumeProgress)
+                        Log.d(TAG, "FirstMediaPlayer $volume")
+                        secondMediaPlayer?.setVolume(volume, volume)
+                        mediaPlayer?.setVolume(volume, volume)
+                        secondMediaPlayer?.setNextMediaPlayer(mediaPlayer!!)
                     }
+                } catch (e: Exception) {
+                    Log.d(TAG, "prepare: ${e.message}")
+                    pauseMedia()
                 }
-            } catch (e: Exception) {
-                Log.d(TAG, "PinkPrepare: ${e.message}")
-                pauseMedia()
-            }
-        }
 
-        pinkSecondMediaPlayer?.setOnCompletionListener {
-            it.reset()
-            try {
-                if (assetFile != null) {
-                    it.setDataSource(
-                            assetFile.fileDescriptor,
-                            assetFile.startOffset,
-                            assetFile.length
-                    )
+            }
+
+            secondMediaPlayer?.setOnCompletionListener {
+                try {
+                    if (it != null) {
+                        if (it.isPlaying)
+                            it.stop()
+                        it.reset()
+                    }
+                    it.setDataSource(this, audioUri)
                     it.prepare()
-
                     it.setOnPreparedListener {
-                        pinkVolume = getVolume(pinkVolumeProgress)
-                        Log.d(TAG, "PinkSecondMediaPlayer $pinkVolume")
-                        pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-                        pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
-                        pinkFirstMediaPlayer?.setNextMediaPlayer(pinkSecondMediaPlayer!!)
+                        volume = getVolume(volumeProgress)
+                        Log.d(TAG, "SecondMediaPlayer $volume")
+                        mediaPlayer?.setVolume(volume, volume)
+                        secondMediaPlayer?.setVolume(volume, volume)
+                        mediaPlayer?.setNextMediaPlayer(secondMediaPlayer!!)
                     }
+                } catch (e: Exception) {
+                    Log.d(TAG, "prepare2: ${e.message}")
+                    pauseMedia()
                 }
-            } catch (e: Exception) {
-                Log.d(TAG, "PinkPrepare2: ${e.message}")
-                pauseMedia()
             }
+
+
+            // Pink media player
+            val assetFile: AssetFileDescriptor = resources.openRawResourceFd(R.raw.pink_noise)
+            pinkFirstMediaPlayer = MediaPlayer.create(this, R.raw.pink_noise)
+            pinkSecondMediaPlayer = MediaPlayer.create(this, R.raw.pink_noise)
+
+            var pinkVolume = getVolume(pinkVolumeProgress)
+
+            pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+            pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+            pinkFirstMediaPlayer?.start()
+            pinkFirstMediaPlayer?.setNextMediaPlayer(pinkSecondMediaPlayer)
+
+            pinkFirstMediaPlayer?.setOnCompletionListener {
+                try {
+                    if (it != null) {
+                        if (it.isPlaying)
+                            it.stop()
+                        it.reset()
+                    }
+                    if (assetFile != null) {
+                        it.setDataSource(
+                                assetFile.fileDescriptor,
+                                assetFile.startOffset,
+                                assetFile.length
+                        )
+                        it.prepare()
+                        it.setOnPreparedListener {
+                            pinkVolume = getVolume(pinkVolumeProgress)
+                            Log.d(TAG, "PinkFirstMediaPlayer $pinkVolume")
+                            pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+                            pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+                            pinkSecondMediaPlayer?.setNextMediaPlayer(pinkFirstMediaPlayer!!)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d(TAG, "PinkPrepare: ${e.message}")
+                    pauseMedia()
+                }
+            }
+
+            pinkSecondMediaPlayer?.setOnCompletionListener {
+                try {
+                    if (it != null) {
+                        if (it.isPlaying)
+                            it.stop()
+                        it.reset()
+                    }
+                    if (assetFile != null) {
+                        it.setDataSource(
+                                assetFile.fileDescriptor,
+                                assetFile.startOffset,
+                                assetFile.length
+                        )
+                        it.prepare()
+
+                        it.setOnPreparedListener {
+                            pinkVolume = getVolume(pinkVolumeProgress)
+                            Log.d(TAG, "PinkSecondMediaPlayer $pinkVolume")
+                            pinkFirstMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+                            pinkSecondMediaPlayer?.setVolume(pinkVolume, pinkVolume)
+                            pinkFirstMediaPlayer?.setNextMediaPlayer(pinkSecondMediaPlayer!!)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d(TAG, "PinkPrepare2: ${e.message}")
+                    pauseMedia()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "MediaPlayerIssue: ${e.message}")
+            playAudio(audioUriString)
         }
 
     }
